@@ -12,7 +12,8 @@ export interface Trips {
 
 export interface Destination {
     id: string;
-    name: string;
+    country: string;
+    city: string;
     description: string;
     latitude: number;
     longitude: number;
