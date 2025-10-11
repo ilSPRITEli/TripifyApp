@@ -5,9 +5,9 @@ export interface Trips {
     startDate: string;
     endDate: string;
     destinations: Destination[];
-    rating: number;
+    rating: number|null;
     travelers: number;
-    budget: number;
+    budget: number;// calculated from destinations
 }
 
 export interface Destination {
@@ -18,7 +18,7 @@ export interface Destination {
     latitude: number;
     longitude: number;
     activities: Activity[];
-    budget: number;
+    budget: number; // calculated from activities
 }
 
 export interface Activity {

@@ -47,12 +47,19 @@ const Navbar = () => {
             setCursorLeft(left);
         };
 
-        updateCursor();
+        // Use requestAnimationFrame to ensure DOM is ready
+        const timeoutId = setTimeout(() => {
+            updateCursor();
+        }, 0);
+
         window.addEventListener('resize', updateCursor);
-        return () => window.removeEventListener('resize', updateCursor);
+        return () => {
+            clearTimeout(timeoutId);
+            window.removeEventListener('resize', updateCursor);
+        };
     }, [activeIndex]);
 
-    if (hiddenNavPaths.includes(current_path)) return null;
+    if (hiddenNavPaths.some(path => current_path.startsWith(path))) return null;
     return (
         <nav className={`flex-row gap-4 fixed bottom-10 w-[90%] mx-auto left-0 right-0 text-secondary flex items-center justify-between z-10`}>
             <div ref={containerRef} className="relative mx-auto bg-primary w-full rounded-full">
@@ -62,11 +69,11 @@ const Navbar = () => {
                             key={item.name}
                             id={item.href}
                             ref={(el) => { itemRefs.current[index] = el; }}
-                            className={`flex z-10 ${current_path === item.href ? "text-secondary" : "text-white"}`}
+                            className={`flex z-10 ${current_path === item.href ? "text-secondary" : "text-white"} transition-all duration-150`}
                         >
-                            <Link href={item.href} className="flex flex-col min-w-12 max-w-12 items-center justify-center text-sm hover:text-white">
+                            <Link href={item.href} className="flex flex-col min-w-12 max-w-12 items-center justify-center text-sm transition-all duration-150 hover:text-white">
                                 <item.icon className="h-6 w-6 mb-1" />
-                                <span className={`text-xs truncate ${current_path === item.href ? "block" : "hidden"}`}>{item.name}</span>
+                                <span className={`text-xs truncate transition-all duration-300 ease-in-out overflow-hidden ${current_path === item.href ? "max-h-6 opacity-100" : "max-h-0 opacity-0"}`}>{item.name}</span>
                             </Link>
                         </div>
                     )) }
