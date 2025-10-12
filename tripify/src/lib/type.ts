@@ -37,3 +37,30 @@ export interface Interest {
     name: string;
     icon: string; // URL or icon name
 }
+
+// Database trip type (matches Prisma schema)
+export interface DatabaseTrip {
+    id: string;
+    title: string;
+    description: string;
+    startDate: string;
+    endDate: string;
+    rating: number | null;
+    travelers: number;
+    budget: number;
+    interestId: string | null;
+    destinations: DatabaseDestination[];
+    Interest: Interest | null;
+}
+
+export interface DatabaseDestination {
+    id: string;
+    country: string;
+    city: string;
+    description: string;
+    latitude: number;
+    longitude: number;
+    budget: number;
+    tripId: string;
+    activities: Activity[];
+}

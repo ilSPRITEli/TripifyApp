@@ -85,9 +85,11 @@ const Navbar = () => {
                 />
             </div>
             <div>
-                <button className="bg-primary p-4 rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <Plus className="text-secondary" />
-                </button>
+                <Link href="/trips/create">
+                    <button className="bg-primary p-4 rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300">
+                        <Plus className="text-secondary" />
+                    </button>
+                </Link>
             </div>
         </nav>
     );

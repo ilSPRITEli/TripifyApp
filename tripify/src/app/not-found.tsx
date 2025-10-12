@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export default function Notfound() {
   return (
-    <div className="w-full h-dvh px-5 pb-20 gap-16 sm:p-20 flex flex-col items-center justify-center">
+    <div className="w-full h-dvh px-5 pb-30 gap-16 flex flex-col items-center justify-center">
       <Lottie
         animationData={animationData}
         loop

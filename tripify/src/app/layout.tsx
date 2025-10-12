@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
-import Header from "./_components/Header";
 import Navbar from "./_components/Navbar";
 import "./globals.css";
 
@@ -30,10 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${LINESeedSansTH.className} antialiased bg-background`}
+        className={`${LINESeedSansTH.className} antialiased bg-background overflow-x-hidden`}
       >
         <Toaster position="top-center" />
-        <Header/>
         <Navbar />
         {children}
       </body>

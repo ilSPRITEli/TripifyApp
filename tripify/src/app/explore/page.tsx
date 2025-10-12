@@ -1,14 +1,16 @@
 import { Suspense } from "react";
+import Explore from "../pages/explore";
 
-const Explore = () => {
+const ExplorePage = () => {
     return (
         <Suspense fallback={<div>Loading...</div>}>
-        <main className="pt-24 pb-20 px-5">
-            <h1 className="text-2xl font-bold mb-4">Explore Page</h1>
-            <p>This is the Explore page of the Tripify app.</p>
-        </main>
+            <div className="flex flex-col items-center justify-items-center min-h-dvh">
+            <main className="flex flex-col row-start-2 items-center sm:items-start w-full">
+                <Explore />
+            </main>
+            </div>
         </Suspense>
     );
 }
 
-export default Explore;
+export default ExplorePage;

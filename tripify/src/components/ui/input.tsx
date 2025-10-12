@@ -20,7 +20,7 @@ function Input({ className, type, icon: Icon, iconPosition = "left", ...props }:
       )}
     >
       {Icon && iconPosition === "left" && (
-        <Icon className="h-4 w-4 text-muted-foreground" />
+        <Icon className="h-4 w-4" />
       )}
       <input
         type={type}

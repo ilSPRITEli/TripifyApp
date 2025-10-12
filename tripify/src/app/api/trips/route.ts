@@ -11,6 +11,29 @@ try {
   throw new Error('Database connection failed. Please check your DATABASE_URL environment variable.');
 }
 
+export async function GET() {
+  try {
+    const trips = await prisma.trip.findMany({
+      include: {
+        destinations: true,
+        Interest: true
+      },
+      orderBy: {
+        startDate: 'desc'
+      }
+    });
+
+    return NextResponse.json({ trips }, { status: 200 });
+  } catch (error) {
+    console.error('Error fetching trips:', error);
+    
+    return NextResponse.json(
+      { error: 'Failed to fetch trips' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

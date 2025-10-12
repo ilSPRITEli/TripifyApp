@@ -17,7 +17,7 @@ function CreateTripContent({ children }: { children: React.ReactNode }) {
   }, [currentStep]);
 
   return (
-    <div className="items-start flex justify-items-start min-h-dvh px-5 pb-20 gap-16 sm:p-20">
+    <div className="items-start flex justify-items-start min-h-dvh px-5 pb-30 gap-16">
       <TripCreateHeader />
       <div className="flex flex-col w-full pt-24 gap-8 min-h-full">
         <Progress value={progress} className="w-full" />
