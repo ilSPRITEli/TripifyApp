@@ -2,7 +2,7 @@
 import TripCard from "@/components/custom/tripCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DatabaseTrip } from "@/lib/type";
+import { DatabaseTrip, Interest } from "@/lib/type";
 import { ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -13,9 +13,11 @@ export default function Explore(){
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [interestTerm, setInterestTerm] = useState("All");
+    const [interests, setInterests] = useState<Interest[]>([]);
 
     useEffect(() => {
         showTrip();
+        showInterests();
       }, []);
     
     const showTrip = async () => {
@@ -37,6 +39,45 @@ export default function Explore(){
             setLoading(false);
         }
     };
+
+    const showInterests = async () => {
+        try {
+            const response = await fetch('/api/interests');
+            if (!response.ok) {
+                throw new Error('Failed to fetch interests');
+            }
+            const data = await response.json();
+            setInterests(Array.isArray(data.interests) ? data.interests : []);
+        } catch (err) {
+            console.error('Error fetching interests:', err);
+            // Not fatal for the page; keep silent UI.
+        }
+    };
+
+    // Derived filtered list based on search + interest
+    const filteredTrips = trips.filter((trip) => {
+        const q = searchTerm.trim().toLowerCase();
+        const interestFilter = (interestTerm && interestTerm !== "All")
+            ? (trip.Interest?.name?.toLowerCase().includes(interestTerm.toLowerCase()) ?? false)
+            : true;
+
+        if (!q) return interestFilter;
+
+        const fields: string[] = [];
+        fields.push(trip.title || "");
+        fields.push(trip.description || "");
+        if (trip.Interest?.name) fields.push(trip.Interest.name);
+        if (Array.isArray(trip.destinations)) {
+            for (const d of trip.destinations) {
+                if (d?.city) fields.push(d.city);
+                if (d?.country) fields.push(d.country);
+                if (d?.description) fields.push(d.description);
+            }
+        }
+
+        const matches = fields.some((f) => f.toLowerCase().includes(q));
+        return matches && interestFilter;
+    });
 
     if (loading) {
         return <LoadingTrips />;
@@ -87,15 +128,14 @@ export default function Explore(){
             </div>
             <div className="w-full flex flex-col gap-8 px-5 pb-30">
                 <div className="flex flex-row gap-2 w-full overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-thumb-rounded-md py-2 px-1">
-                    {["All", "Beach", "Mountain", "City", "Adventure", "Cultural", "Relaxation", "Wildlife"].map((interest) => (
+                    {["All", ...interests.map((i) => i.name)].map((interest) => (
                         <button 
                             key={interest}
                             onClick={() => {
-                                if (interestTerm === interest) {
-                                    setInterestTerm("");
-                                } else {
-                                    setInterestTerm(interest);
-                                }
+                                // Toggle off goes back to "All"; avoid setting "All" twice
+                                if (interest === "All") setInterestTerm("All");
+                                else if (interestTerm === interest) setInterestTerm("All");
+                                else setInterestTerm(interest);
                             }}
                             className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-150
                                 ${interestTerm === interest ? "bg-primary text-secondary" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
@@ -109,14 +149,14 @@ export default function Explore(){
                     <h1 className='text-xl font-bold'>Trending Trips.</h1>
                     <div className="w-full">
                         <div className="flex flex-row gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-thumb-rounded-md py-2 px-1">
-                                {trips.map((trip) => {
+                                {filteredTrips.map((trip) => {
                                 const destination = trip.destinations?.[0];
                                 const location = destination
                                     ? `${destination.city}, ${destination.country}`
                                     : "Unknown Location";
 
                                 return (
-                                    <div className="min-w-[280px] max-w-[100px] flex-shrink-0" key={trip.id}>
+                                    <div className="min-w-[320px] max-w-xs flex-shrink-0" key={trip.id}>
                                     <TripCard
                                         title={trip.title}
                                         location={location}
@@ -133,6 +173,9 @@ export default function Explore(){
                                     </div>
                                 );
                                 })}
+                                {filteredTrips.length === 0 && (
+                                  <div className="text-sm text-gray-500 py-4">No trips match your filters.</div>
+                                )}
                             </div>
                     </div>
                 </div>
@@ -140,14 +183,14 @@ export default function Explore(){
                     <h1 className='text-xl font-bold'>Recommended by Tripify.</h1>
                     <div className="w-full">
                         <div className="flex flex-row gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-thumb-rounded-md py-2 px-1">
-                            {trips.map((trip) => {
+                            {filteredTrips.map((trip) => {
                             const destination = trip.destinations?.[0];
                             const location = destination
                                 ? `${destination.city}, ${destination.country}`
                                 : "Unknown Location";
 
                             return (
-                                <div className="min-w-[280px] max-w-[100px] flex-shrink-0" key={trip.id}>
+                                <div className="min-w-[320px] max-w-xs flex-shrink-0" key={trip.id}>
                                 <TripCard
                                     title={trip.title}
                                     location={location}
@@ -164,6 +207,9 @@ export default function Explore(){
                                 </div>
                             );
                             })}
+                            {filteredTrips.length === 0 && (
+                              <div className="text-sm text-gray-500 py-4">No trips match your filters.</div>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -7,7 +7,7 @@ export interface Trips {
     destinations: Destination[];
     rating: number|null;
     travelers: number;
-    interests: Interest[];
+    interests: Interest;
     budget: number;// calculated from destinations
 }
 

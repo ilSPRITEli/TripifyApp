@@ -76,16 +76,16 @@ export async function POST(request: NextRequest) {
     };
 
     // Add interestId only if interests exist and have valid IDs
-    if (interests && interests.length > 0 && interests[0].id) {
+    if (interests) {
       // Verify that the interest exists in the database
       const existingInterest = await prisma.interest.findUnique({
-        where: { id: interests[0].id }
+        where: { id: interests.id }
       });
       
       if (existingInterest) {
-        tripData.interestId = interests[0].id;
+        tripData.interestId = interests.id;
       } else {
-        console.warn(`Interest with ID ${interests[0].id} not found in database. Skipping interest assignment.`);
+        console.warn(`Interest with ID ${interests.id} not found in database. Skipping interest assignment.`);
       }
     }
 

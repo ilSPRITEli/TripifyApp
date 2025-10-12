@@ -68,10 +68,9 @@ const TripCreateFooter = () => {
         throw new Error('Failed to create trip');
       }
 
-      const { trip } = await response.json();
+      console.log('Created trip data' + await response.json());
+
       toast.success('Trip created successfully!');
-      
-      // Navigate to the trip details or home page
       router.push('/');
     } catch (error) {
       console.error('Error creating trip:', error);
