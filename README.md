@@ -5,12 +5,6 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
 bun dev
 ```
 
@@ -34,3 +28,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## PWA
+
+This app is installable as a Progressive Web App.
+
+- Manifest: `src/app/manifest.ts`
+- Icons: generated dynamically at `src/app/icons/[size]/route.ts` (e.g., `/icons/192`, `/icons/512`)
+- Service worker: `public/sw.js` (registered via `src/app/_components/RegisterSW.tsx`)
+- Offline page: `src/app/offline/page.tsx`
+
+Usage:
+
+- Dev: run `bun dev` (or `npm run dev`) and visit the site. The service worker registers in the browser; install prompts may appear on supported platforms.
+- Build: `bun run build && bun start` (or `npm run build && npm start`).
+
+Notes:
+
+- The service worker precaches the offline page and uses a stale-while-revalidate strategy for same-origin GET requests.
+- Manifest icons are served as PNGs without a file extension in the URL; the correct `Content-Type` is set by the route.

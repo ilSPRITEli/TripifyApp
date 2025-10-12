@@ -127,7 +127,7 @@ export default function Explore(){
                 />
             </div>
             <div className="w-full flex flex-col gap-8 px-5 pb-30">
-                <div className="flex flex-row gap-2 w-full overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-thumb-rounded-md py-2 px-1">
+                <div className="flex flex-row gap-2 w-full overflow-x-auto no-scrollbar py-2 px-1">
                     {["All", ...interests.map((i) => i.name)].map((interest) => (
                         <button 
                             key={interest}
@@ -148,7 +148,7 @@ export default function Explore(){
                 <div className="grid grid-cols-1 gap-0 w-full">
                     <h1 className='text-xl font-bold'>Trending Trips.</h1>
                     <div className="w-full">
-                        <div className="flex flex-row gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-thumb-rounded-md py-2 px-1">
+                        <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar py-2 px-1">
                                 {filteredTrips.map((trip) => {
                                 const destination = trip.destinations?.[0];
                                 const location = destination
@@ -182,7 +182,7 @@ export default function Explore(){
                 <div className="grid grid-cols-1 gap-0 w-full">
                     <h1 className='text-xl font-bold'>Recommended by Tripify.</h1>
                     <div className="w-full">
-                        <div className="flex flex-row gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-thumb-rounded-md py-2 px-1">
+                        <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar py-2 px-1">
                             {filteredTrips.map((trip) => {
                             const destination = trip.destinations?.[0];
                             const location = destination

@@ -95,7 +95,7 @@ export default function Home() {
       <div className="grid grid-cols-1 gap-2 w-full">
         <h1 className='text-xl font-bold'>Your upcoming trips.</h1>
         <div className="w-full">
-          <div className="flex flex-row gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-thumb-rounded-md py-2 px-1">
+          <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar py-2 px-1">
             {trips.map((trip) => {
               const destination = trip.destinations?.[0];
               const location = destination

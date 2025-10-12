@@ -71,7 +71,7 @@ const Navbar = () => {
                             ref={(el) => { itemRefs.current[index] = el; }}
                             className={`flex z-10 ${current_path === item.href ? "text-secondary" : "text-white"} transition-all duration-150`}
                         >
-                            <Link href={item.href} className="flex flex-col min-w-12 max-w-12 items-center justify-center text-sm transition-all duration-150 hover:text-white">
+                            <Link href={item.href} className="flex flex-col min-w-12 max-w-12 items-center justify-center text-sm transition-all duration-150">
                                 <item.icon className="h-6 w-6 mb-1" />
                                 <span className={`text-xs truncate transition-all duration-300 ease-in-out overflow-hidden ${current_path === item.href ? "max-h-6 opacity-100" : "max-h-0 opacity-0"}`}>{item.name}</span>
                             </Link>
