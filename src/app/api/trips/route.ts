@@ -1,5 +1,5 @@
-import { PrismaClient } from '@/generated/prisma';
-import type { Prisma } from '@/generated/prisma';
+import type { Prisma } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Initialize Prisma with better error handling
