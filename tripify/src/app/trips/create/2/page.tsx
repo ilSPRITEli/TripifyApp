@@ -18,7 +18,9 @@ export default function DatesStepPage() {
   }, [selectedDestination, router]);
 
   useEffect(() => {
-    setAllowContinue && setAllowContinue(!!(depatureDate && returnDate));
+    if (setAllowContinue) {
+      setAllowContinue(!!(depatureDate && returnDate));
+    }
   }, [depatureDate, returnDate, setAllowContinue]);
 
 
@@ -31,8 +33,8 @@ export default function DatesStepPage() {
   }
 
   const handleSelectReturnDate = (date: Date | undefined) => {
-    if (date) {
-      setReturnDate && setReturnDate(date);
+    if (date && setReturnDate) {
+      setReturnDate(date);
     }
   }
 
@@ -45,8 +47,8 @@ export default function DatesStepPage() {
           Selected destination: {selectedDestination.city}, {selectedDestination.country}
         </p>
       </div>
-      <DatePicker label='Departure Date' className='w-full' value={depatureDate||undefined} onChange={handleSelectDepartureDate} />
-      <DatePicker label='Return Date' className='w-full' value={returnDate||undefined} onChange={handleSelectReturnDate} />
+      <DatePicker label='Departure Date' value={depatureDate||undefined} onChange={handleSelectDepartureDate} />
+      <DatePicker label='Return Date' value={returnDate||undefined} onChange={handleSelectReturnDate} />
       <div>
         <p className="text-base">
           Quick Options
@@ -56,13 +58,13 @@ export default function DatesStepPage() {
             if (depatureDate) {
               const returnDate = new Date(depatureDate);
               returnDate.setDate(returnDate.getDate() + 2);
-              setReturnDate && setReturnDate(returnDate);
+              if (setReturnDate) setReturnDate(returnDate);
             }else{
               const today = new Date();
               setDepatureDate(today);
               const returnDate = new Date(today);
               returnDate.setDate(returnDate.getDate() + 2);
-              setReturnDate && setReturnDate(returnDate);
+              if (setReturnDate) setReturnDate(returnDate);
             }
           }}>
             3 days
@@ -71,13 +73,13 @@ export default function DatesStepPage() {
             if (depatureDate) {
               const returnDate = new Date(depatureDate);
               returnDate.setDate(returnDate.getDate() + 6);
-              setReturnDate && setReturnDate(returnDate);
+              if (setReturnDate) setReturnDate(returnDate);
             }else{
               const today = new Date();
               setDepatureDate(today);
               const returnDate = new Date(today);
               returnDate.setDate(returnDate.getDate() + 6);
-              setReturnDate && setReturnDate(returnDate);
+              if (setReturnDate) setReturnDate(returnDate);
             }
           }}>
             1 weeks
@@ -86,13 +88,13 @@ export default function DatesStepPage() {
             if (depatureDate) {
               const returnDate = new Date(depatureDate);
               returnDate.setDate(returnDate.getDate() + 13);
-              setReturnDate && setReturnDate(returnDate);
+              if (setReturnDate) setReturnDate(returnDate);
             }else{
               const today = new Date();
               setDepatureDate(today);
               const returnDate = new Date(today);
               returnDate.setDate(returnDate.getDate() + 13);
-              setReturnDate && setReturnDate(returnDate);
+              if (setReturnDate) setReturnDate(returnDate);
             }
           }}>
             2 weeks
@@ -101,13 +103,13 @@ export default function DatesStepPage() {
             if (depatureDate) {
               const returnDate = new Date(depatureDate);
               returnDate.setDate(returnDate.getDate() + 27);
-              setReturnDate && setReturnDate(returnDate);
+              if (setReturnDate) setReturnDate(returnDate);
             }else{
               const today = new Date();
               setDepatureDate(today);
               const returnDate = new Date(today);
               returnDate.setDate(returnDate.getDate() + 27);
-              setReturnDate && setReturnDate(returnDate);
+              if (setReturnDate) setReturnDate(returnDate);
             }
           }}>
             1 month
@@ -117,4 +119,3 @@ export default function DatesStepPage() {
     </div>
   );
 }
-

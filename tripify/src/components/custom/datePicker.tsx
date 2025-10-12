@@ -13,14 +13,13 @@ import {
 } from "@/components/ui/popover"
 
 interface DatePickerProps {
-    className?: string
     label?: string
     placeholder?: string
     value?: Date | undefined
     onChange?: (date: Date | undefined) => void
 }
 
-export function DatePicker( { className, label="label", placeholder, value, onChange, ...props }: DatePickerProps) {
+export function DatePicker( { label="label", placeholder, value, onChange }: DatePickerProps) {
   const [open, setOpen] = React.useState(false)
   const [internalDate, setInternalDate] = React.useState<Date | undefined>(value)
 

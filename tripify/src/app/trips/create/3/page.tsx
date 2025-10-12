@@ -19,15 +19,17 @@ export default function TravelerStepPage() {
     }, [selectedDestination, router, depatureDate, returnDate]);
 
     useEffect(() => {
-    setAllowContinue && setAllowContinue(!!(travlers && travlers > 0));
+    if (setAllowContinue) {
+        setAllowContinue(!!(travlers && travlers > 0));
+    }
     }, [setAllowContinue, travlers, depatureDate, returnDate]);
 
     const handleTravelersChange = (num: number) => {
     if (num < 1) {
-        setTravlers && setTravlers(1);
+        if (setTravlers) setTravlers(1);
         return;
     }
-    setTravlers && setTravlers(num);
+    if (setTravlers) setTravlers(num);
     }
 
     const quickOptions = [

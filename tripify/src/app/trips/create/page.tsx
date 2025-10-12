@@ -27,10 +27,12 @@ const CreateTripPage = () => {
         }
 
     }
-    , [searchTerm, filteredDestinations, selectedDestination]);
+    , [searchTerm, filteredDestinations, selectedDestination, setSelectedDestination]);
 
     useEffect(() => {
-        setAllowContinue && setAllowContinue(!!selectedDestination);
+        if (setAllowContinue) {
+            setAllowContinue(!!selectedDestination);
+        }
     }, [selectedDestination, setAllowContinue]);
 
     const handleSelectDestination = (dest:Destination) => {

@@ -138,7 +138,7 @@ export function NoTrips() {
       />
       <div className='flex flex-col gap-2 mt-4 text-center'>
         <h1 className='text-xl font-bold text-center mt-4'>
-          Let's Get Your Next Adventure Started.
+          Let&apos;s Get Your Next Adventure Started.
         </h1>
         <span className='text-xs text-center text-gray-500'>
           Your created trips will appear here.Ready to fill this space?

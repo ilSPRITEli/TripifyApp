@@ -16,10 +16,12 @@ export default function PreferenceStepPage() {
         console.log('No destination selected, redirecting to step 1');
         router.replace('/trips/create');
         }
-    }, [selectedDestination, router, depatureDate, returnDate]);
+    }, [selectedDestination, router, depatureDate, returnDate, travlers]);
 
     useEffect(() => {
-        setAllowContinue && setAllowContinue(!!(interests) && !!(budget&&budget>=0));
+        if (setAllowContinue) {
+            setAllowContinue(!!(interests) && !!(budget && budget >= 0));
+        }
     }, [setAllowContinue, interests, budget]);
 
     const handleInterestsChange = (intr:Interest) => {
@@ -35,10 +37,10 @@ export default function PreferenceStepPage() {
 
     const handleBudgetChange = (num: number) => {
         if (num < 0) {
-        setBudget && setBudget(0);
+        if (setBudget) setBudget(0);
         return;
         }
-        setBudget && setBudget(num);
+        if (setBudget) setBudget(num);
     }
 
     interface BudgetOption {

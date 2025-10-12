@@ -17,14 +17,16 @@ export default function NameStepPage() {
         console.log('No destination selected, redirecting to step 1');
         router.replace('/trips/create');
         }
-    }, [selectedDestination, router, depatureDate, returnDate]);
+    }, [selectedDestination, router, depatureDate, returnDate, travlers, interests, budget]);
 
     useEffect(() => {
-        setAllowContinue && setAllowContinue(!!(name && name.length > 0));
+        if (setAllowContinue) {
+            setAllowContinue(!!(name && name.length > 0));
+        }
     }, [setAllowContinue, name]);
     
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setName && setName(e.target.value);
+        if (setName) setName(e.target.value);
     }
 
     return (

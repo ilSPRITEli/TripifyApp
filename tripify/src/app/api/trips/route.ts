@@ -1,4 +1,5 @@
 import { PrismaClient } from '@/generated/prisma';
+import type { Prisma } from '@/generated/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Initialize Prisma with better error handling
@@ -56,7 +57,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare trip data
-    const tripData: any = {
+    const tripData: Prisma.TripUncheckedCreateInput = {
       title: name,
       description: `Trip to ${selectedDestination.city}, ${selectedDestination.country}`,
       startDate: new Date(depatureDate),
