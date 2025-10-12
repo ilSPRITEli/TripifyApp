@@ -24,7 +24,6 @@ const CreateTripPage = () => {
             if (!stillExists) {
                 setSelectedDestination(null);
             }
-            console.log(selectedDestination);
         }
 
     }
@@ -67,8 +66,8 @@ const CreateTripPage = () => {
                             <button 
                                 key={destination.id}
                                 onClick={() => handleSelectDestination(destination)}
-                                className={`w-full flex flex-row items-center justify-between p-4 rounded-2xl cursor-pointer bg-white transition-colors
-                                    ${selectedDestination === destination ? "border-2 border-primary" : " hover:bg-gray-200"}`}
+                                className={`w-full flex flex-row items-center justify-between p-4 rounded-2xl transition-all duration-150 cursor-pointer bg-white
+                                    ${selectedDestination === destination ? "border-2 border-primary" : "border-2 border-primary/0"}`}
                             >
                                 <div className="flex flex-row items-center gap-4">
                                     <MapPin className="h-4 w-4 text-gray-500" />

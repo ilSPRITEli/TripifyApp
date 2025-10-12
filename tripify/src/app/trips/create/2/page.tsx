@@ -7,7 +7,7 @@ import { useTripCreate } from '../TripCreateContext';
 
 export default function DatesStepPage() {
   const router = useRouter();
-  const { selectedDestination, depatureDate, setDepatureDate, returnDate, setReturnDate, allowContinue, setAllowContinue } = useTripCreate();
+  const { selectedDestination, depatureDate, setDepatureDate, returnDate, setReturnDate, setAllowContinue } = useTripCreate();
 
   useEffect(() => {
     if (!selectedDestination) {
@@ -15,7 +15,6 @@ export default function DatesStepPage() {
       console.log('No destination selected, redirecting to step 1');
       router.replace('/trips/create');
     }
-    console.log('Welcome to Step 2: Dates' );
   }, [selectedDestination, router]);
 
   useEffect(() => {
@@ -28,18 +27,15 @@ export default function DatesStepPage() {
   const handleSelectDepartureDate = (date: Date | undefined) => {
     if (date) {
       setDepatureDate(date);
-      console.log('Selected departure date:', date);
     }
   }
 
   const handleSelectReturnDate = (date: Date | undefined) => {
     if (date) {
       setReturnDate && setReturnDate(date);
-      console.log('Selected return date:', date);
     }
   }
 
-  const isContinueDisabled = !depatureDate || !returnDate;
 
   return (
     <div className="flex flex-col gap-6">

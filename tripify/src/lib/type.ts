@@ -7,6 +7,7 @@ export interface Trips {
     destinations: Destination[];
     rating: number|null;
     travelers: number;
+    interests: Interest[];
     budget: number;// calculated from destinations
 }
 
@@ -29,4 +30,10 @@ export interface Activity {
     time: string;
     location: string;
     budget: number;
+}
+
+export interface Interest {
+    id: string;
+    name: string;
+    icon: string; // URL or icon name
 }

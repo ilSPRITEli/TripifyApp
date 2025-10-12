@@ -1,4 +1,15 @@
-import { Destination } from './type';
+import { Destination, Interest } from './type';
+
+export const mockInterests: Interest[] = [
+    { id: '8e110925-89cc-4a26-bde6-f36363fd6e01', name: 'Adventure', icon: '🏞️' },
+    { id: '8e110925-89cc-4a26-bde6-f36363fd6e02', name: 'Culture', icon: '🏛️' },
+    { id: '8e110925-89cc-4a26-bde6-f36363fd6e03', name: 'Relaxation', icon: '🏖️' },
+    { id: '8e110925-89cc-4a26-bde6-f36363fd6e04', name: 'Nature', icon: '🌲' },
+    { id: '8e110925-89cc-4a26-bde6-f36363fd6e05', name: 'Food & Drink', icon: '🍽️' },
+    { id: '8e110925-89cc-4a26-bde6-f36363fd6e06', name: 'History', icon: '🏺' },
+    { id: '8e110925-89cc-4a26-bde6-f36363fd6e07', name: 'Wildlife', icon: '🦁' },
+    { id: '8e110925-89cc-4a26-bde6-f36363fd6e08', name: 'Shopping', icon: '🛍️' },
+];
 
 export const mockDestinations: Destination[] = [
     {
@@ -29,6 +40,7 @@ export const mockDestinations: Destination[] = [
             },
         ],
         budget: 2000,
+
     },
     {
         id: '2',

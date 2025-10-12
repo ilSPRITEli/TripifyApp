@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Trip {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  rating      Float? // 0..5 (nullable ตาม interface)
+  travelers   Int
+  /// calculated from destinations (เก็บเป็นค่า numeric)
+  budget      Decimal  @db.Decimal(12, 2)
+
+  destinations Destination[]
+  Interest     Interest?     @relation(fields: [interestId], references: [id])
+  interestId   String?       @db.Uuid
+
+  @@map("trips")
+}
+
+/// Destination: เมือง/ประเทศในหนึ่งทริป
+model Destination {
+  id          String  @id @default(uuid()) @db.Uuid
+  country     String
+  city        String
+  description String
+  latitude    Float
+  longitude   Float
+  /// calculated from activities
+  budget      Decimal @db.Decimal(12, 2)
+
+  // relation
+  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  tripId String @db.Uuid
+
+  activities Activity[]
+
+  @@index([tripId])
+  @@map("destinations")
+}
+
+/// Activity: กิจกรรมภายในเมืองปลายทาง
+model Activity {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String
+  date        DateTime // เก็บวันที่ (UTC/เขตเวลาให้จัดการในแอป)
+  time        String // "HH:mm" หรือ "HH:mm:ss" ตามที่คุณใช้ใน UI
+  location    String
+  budget      Decimal  @db.Decimal(12, 2)
+
+  // relation
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  destinationId String      @db.Uuid
+
+  @@index([destinationId])
+  @@map("activities")
+}
+
+model Interest {
+  id   String @id @default(uuid()) @db.Uuid
+  name String @unique
+  icon String
+  Trip Trip[]
+
+  @@map("interests")
+}

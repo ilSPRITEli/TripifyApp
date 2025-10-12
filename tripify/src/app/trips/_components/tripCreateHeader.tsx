@@ -36,7 +36,7 @@ const TripCreateHeader = () => {
             </button>
             <div>
                 <h1 className="text-base font-bold">Create new trip</h1>
-                <p className="text-sm">step 1 of 5</p>
+                <p className="text-sm">step {currentStep} of 5</p>
             </div>
         </div>
         </header>

@@ -9,7 +9,7 @@ const Header = () => {
 
     const current_path = usePathname();
     const hiddenNavPaths = ["/login", "/register", "/profile/edit", "/trips/create"]
-    if (hiddenNavPaths.includes(current_path)) return null;
+    if (hiddenNavPaths.some(path => current_path.startsWith(path))) return null;
     return (
         <header className="bg-white text-black shadow-md w-full px-5 py-4 fixed top-0 left-0 z-10 flex flex-row justify-between items-center">
         <div className="flex flex-row items-center gap-3">

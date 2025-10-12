@@ -1,6 +1,6 @@
 'use client';
 
-import type { Destination } from '@/lib/type';
+import type { Destination, Interest } from '@/lib/type';
 import React, { createContext, useContext, useState } from 'react';
 
 type TripCreateContextType = {
@@ -14,6 +14,14 @@ type TripCreateContextType = {
   setReturnDate?: (date: Date | null) => void;
   allowContinue?: boolean;
   setAllowContinue?: (allow: boolean) => void;
+  travlers?: number;
+  setTravlers?: (num: number) => void;
+  budget?: number;
+  setBudget?: (num: number) => void;
+  interests?: Interest | null;
+  setInterests?: (interests: Interest | null) => void;
+  name?: string;
+  setName?: (name: string) => void;
 };
 
 const TripCreateContext = createContext<TripCreateContextType | undefined>(undefined);
@@ -24,20 +32,23 @@ export const TripCreateProvider = ({ children }: { children: React.ReactNode }) 
   const [depatureDate, setDepatureDate] = useState<Date | null>(null);
   const [returnDate, setReturnDate] = useState<Date | null>(null);
   const [allowContinue, setAllowContinue] = useState(false);
+  const [travlers, setTravlers] = useState(1);
+  const [budget, setBudget] = useState<number | undefined>(undefined);
+  const [interests, setInterests] = useState<Interest | null>(null);
+  const [name, setName] = useState<string | undefined>(undefined);
 
   return (
     <TripCreateContext.Provider 
       value={{ 
-        selectedDestination, 
-        setSelectedDestination, 
-        currentStep, 
-        setCurrentStep, 
-        depatureDate, 
-        setDepatureDate,
-        returnDate,
-        setReturnDate,
-        allowContinue,
-        setAllowContinue
+        selectedDestination, setSelectedDestination, 
+        currentStep, setCurrentStep, 
+        depatureDate, setDepatureDate,
+        returnDate, setReturnDate,
+        allowContinue, setAllowContinue,
+        travlers, setTravlers,
+        budget, setBudget,
+        interests, setInterests,
+        name, setName
       }}>
       {children}
     </TripCreateContext.Provider>
