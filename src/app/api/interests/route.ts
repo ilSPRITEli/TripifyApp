@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 // Initialize Prisma with better error handling
 let prisma: PrismaClient;
-
+export const runtime = 'nodejs';
 try {
   prisma = new PrismaClient();
 } catch (error) {
