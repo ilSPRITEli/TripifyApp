@@ -1,3 +1,4 @@
+import A2HSBanner from "@/components/A2HSBanner";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
@@ -45,6 +46,7 @@ export default function RootLayout({
         <Toaster position="top-center" />
         <RegisterSW />
         <Navbar />
+        <A2HSBanner />
         {children}
       </body>
     </html>

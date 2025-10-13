@@ -61,7 +61,7 @@ const Navbar = () => {
 
     if (hiddenNavPaths.some(path => current_path.startsWith(path))) return null;
     return (
-        <nav className={`flex-row gap-4 fixed bottom-10 w-[90%] mx-auto left-0 right-0 text-secondary flex items-center justify-between z-10`}>
+        <nav className={`flex-row gap-4 fixed bottom-4 w-[90%] mx-auto left-0 right-0 text-secondary flex items-center justify-between z-10`}>
             <div ref={containerRef} className="relative mx-auto bg-primary w-full rounded-full">
                 <div className="flex items-center justify-center gap-6 h-16 w-full pb-4 pt-2 text-white">
                     { NavItems.map((item, index) => (
@@ -80,9 +80,11 @@ const Navbar = () => {
                 </div>
                 <div
                     key={'cursor'}
-                    className="absolute w-16 h-16 bg-primary rounded-full bottom-4 pointer-events-none z-0 transition-all duration-300 ease-out"
+                    className="absolute w-16 h-16 bg-transparent bottom-4 pointer-events-none z-0 transition-all duration-300 ease-out"
                     style={{ left: `${cursorLeft}px` }}
-                />
+                >
+                    <img src="/cursor.svg" alt="cursor" className="w-full h-full object-contain" />
+                </div>
             </div>
             <div>
                 <Link href="/trips/create">
