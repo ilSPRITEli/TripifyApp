@@ -12,8 +12,12 @@ export function useA2HS() {
   useEffect(() => {
     // ติดตั้งแล้ว? (Chrome/Android + Desktop PWA)
     const media = window.matchMedia('(display-mode: standalone)');
-    const updateStandalone = () =>
-      setIsStandalone(media.matches || (window.navigator as any).standalone === true);
+
+    const updateStandalone = () => {
+      const nav = window.navigator as Navigator & { standalone?: boolean };
+      setIsStandalone(media.matches || nav.standalone === true);
+    };
+
     updateStandalone();
     media.addEventListener?.('change', updateStandalone);
 
