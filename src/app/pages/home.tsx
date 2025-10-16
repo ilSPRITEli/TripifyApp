@@ -71,18 +71,11 @@ export default function Home() {
           const nextTrip = sortedTrips[0];
           if (!nextTrip) return null;
           const destination = nextTrip.destination;
-          const location = destination
-            ? `${destination.city}, ${destination.country}`
-            : "Unknown Location";
 
           return (
             <TripCard
               key={nextTrip.id}
-              title={nextTrip.title}
-              location={location}
-              startDate={nextTrip.startDate}
-              endDate={nextTrip.endDate}
-              travelers={nextTrip.travelers}
+              trip={nextTrip}
               className="py-0"
               imageUrl="/images/tripImage.png"
               onAction={() => {
@@ -98,18 +91,11 @@ export default function Home() {
           <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar py-2 px-1">
             {trips.map((trip) => {
               const destination = trip.destination;
-              const location = destination
-                ? `${destination.city}, ${destination.country}`
-                : "Unknown Location";
-
               return (
                 <div className="min-w-[320px] max-w-xs flex-shrink-0" key={trip.id}>
                   <TripCard
-                    title={trip.title}
-                    location={location}
-                    startDate={trip.startDate}
-                    endDate={trip.endDate}
-                    travelers={trip.travelers}
+                    key={trip.id}
+                    trip={trip}
                     className="py-0"
                     imageUrl="/images/tripImage.png"
                     showAction = {false}

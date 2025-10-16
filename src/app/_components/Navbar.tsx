@@ -30,7 +30,7 @@ const Navbar = () => {
         [current_path]
     );
 
-    const hiddenNavPaths = ["/login", "/register", "/profile/edit", "/trips/create"];
+    const hiddenNavPaths = ["/login", "/register", "/profile/edit", "/trips/"];
 
     useEffect(() => {
         const updateCursor = () => {

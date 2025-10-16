@@ -3,6 +3,7 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Trip } from "@/lib/type";
 import { cn } from "@/lib/utils";
 import {
     ArrowRight,
@@ -12,21 +13,18 @@ import {
     Users,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 type DateLike = string | Date | number;
 
 export interface TripCardProps {
-title: string;
-location: string;
-startDate: DateLike;
-endDate: DateLike;
-travelers: number;
+trip: Trip;
 imageUrl: string;
 favorite?: boolean;
 defaultFavorite?: boolean;
 onFavoriteToggle?: (next: boolean) => void;
-onAction?: () => void;
+onAction?: () => void
 className?: string;
 showAction?: boolean;
 }
@@ -41,11 +39,7 @@ return date.toLocaleDateString(undefined, {
 }
 
 export default function TripCard({
-    title,
-    location,
-    startDate,
-    endDate,
-    travelers,
+    trip,
     imageUrl,
     favorite,
     defaultFavorite,
@@ -59,8 +53,8 @@ export default function TripCard({
     const fav = isControlled ? (favorite as boolean) : internalFav;
 
     const dateRange = useMemo(
-        () => `${formatDate(startDate)} - ${formatDate(endDate)}`,
-        [startDate, endDate]
+        () => `${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`,
+        [trip.startDate, trip.endDate]
     );
 
     const toggleFav = () => {
@@ -70,6 +64,7 @@ export default function TripCard({
     };
 
     return (
+        <Link href={`/trips/${trip.id}`}>
         <Card
         className={cn(
             "relative overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm",
@@ -82,7 +77,7 @@ export default function TripCard({
                 <AspectRatio ratio={16 / 9}>
                     <Image
                     src={imageUrl}
-                    alt={title}
+                    alt={trip.title}
                     fill
                     className="object-cover"
                     sizes="(min-width: 1024px) 480px, 100vw"
@@ -109,13 +104,17 @@ export default function TripCard({
             <div className={`w-full flex flex-row items-center p-4 pb-6 ${showAction ? "justify-between":"justify-start"}`}>
                 <div className="w-full">
                     <h3 className="text-base font-bold leading-6 text-zinc-900 dark:text-zinc-100">
-                    {title}
+                    {trip.title}
                     </h3>
 
                     <div className="mt-2 space-y-1.5 text-sm text-zinc-600 dark:text-zinc-400">
                         <div className="flex items-center gap-2">
                             <MapPin className="h-4 w-4" />
-                            <span className="truncate">{location}</span>
+                            <span className="truncate">
+                                {trip.destination && trip.destination.city && trip.destination.country
+                                    ? `${trip.destination.city}, ${trip.destination.country}`
+                                    : "unknown range"}
+                            </span>
                         </div>
                         <div className="flex items-center gap-2">
                             <CalendarDays className="h-4 w-4" />
@@ -123,7 +122,7 @@ export default function TripCard({
                         </div>
                         <div className="flex items-center gap-2">
                             <Users className="h-4 w-4" />
-                            <span>{travelers} Traveler{travelers === 1 ? "" : "s"}</span>
+                            <span>{trip.travelers} Traveler{trip.travelers === 1 ? "" : "s"}</span>
                         </div>
                     </div>
                 </div>
@@ -141,5 +140,6 @@ export default function TripCard({
                 </Button>
             </div>
         </Card>
+        </Link>
     );
 }

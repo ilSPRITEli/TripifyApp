@@ -158,11 +158,8 @@ export default function Explore(){
                                 return (
                                     <div className="min-w-[320px] max-w-xs flex-shrink-0" key={trip.id}>
                                     <TripCard
-                                        title={trip.title}
-                                        location={location}
-                                        startDate={trip.startDate}
-                                        endDate={trip.endDate}
-                                        travelers={trip.travelers}
+                                        key={trip.id}
+                                        trip={trip}
                                         className="py-0 w-full"
                                         imageUrl="/images/tripImage.png"
                                         showAction = {false}
@@ -192,11 +189,8 @@ export default function Explore(){
                             return (
                                 <div className="min-w-[320px] max-w-xs flex-shrink-0" key={trip.id}>
                                 <TripCard
-                                    title={trip.title}
-                                    location={location}
-                                    startDate={trip.startDate}
-                                    endDate={trip.endDate}
-                                    travelers={trip.travelers}
+                                    key={trip.id}
+                                    trip={trip}
                                     className="py-0 w-full"
                                     imageUrl="/images/tripImage.png"
                                     showAction = {false}
