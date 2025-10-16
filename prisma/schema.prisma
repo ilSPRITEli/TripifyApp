@@ -22,11 +22,12 @@ model Trip {
   endDate     DateTime
   travelers   Int
   isTemplate  Boolean
+  rating      Float?
   /// calculated from destinations (เก็บเป็นค่า numeric)
   budget      Decimal    @db.Decimal(12, 2)
   activities  Activity[]
 
-  destinations  Destination? @relation(fields: [destinationId], references: [id])
+  destination  Destination? @relation(fields: [destinationId], references: [id])
   destinationId String?      @db.Uuid
   Interest      Interest?    @relation(fields: [interestId], references: [id])
   interestId    String?      @db.Uuid
