@@ -12,11 +12,12 @@ try {
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
     const trip = await prisma.trip.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         destination: true,
         Interest: true,
@@ -39,14 +40,15 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await req.json();
     const { isTemplate, title, description } = body as Partial<{ isTemplate: boolean; title: string; description: string }>;
+    const { id } = await context.params;
 
     const updated = await prisma.trip.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(typeof isTemplate === "boolean" ? { isTemplate } : {}),
         ...(title ? { title } : {}),
