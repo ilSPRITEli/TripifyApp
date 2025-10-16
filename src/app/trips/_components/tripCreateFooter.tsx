@@ -1,5 +1,6 @@
 'use client';
 
+import { Destination } from "@prisma/client";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -8,6 +9,7 @@ import { useTripCreate } from "../../trips/create/TripCreateContext";
 
 const TripCreateFooter = () => {
   const router = useRouter();
+  const [ destination, setDestination ] = useState<Destination|null>(null);
   const [ buttonText, setButtonText ] = useState('Continue');
   const [ isCreating, setIsCreating ] = useState(false);
   const { 
@@ -19,8 +21,10 @@ const TripCreateFooter = () => {
     returnDate,
     travlers,
     budget,
-    interests,
-    name
+    interest,
+    name,
+    isTemplate,
+    setIsTemplate
   } = useTripCreate();
 
   const handleContinue = async () => {
@@ -47,6 +51,14 @@ const TripCreateFooter = () => {
     setIsCreating(true);
     setButtonText('Creating...');
 
+    if (!isTemplate && setIsTemplate){
+      setIsTemplate(false);
+    }
+
+    if (selectedDestination){
+      setDestination(selectedDestination);
+    }
+    
     try {
       const response = await fetch('/api/trips', {
         method: 'POST',
@@ -55,12 +67,13 @@ const TripCreateFooter = () => {
         },
         body: JSON.stringify({
           name,
-          selectedDestination,
           depatureDate,
           returnDate,
           travlers,
           budget,
-          interests
+          interest,
+          isTemplate,
+          destination
         }),
       });
 

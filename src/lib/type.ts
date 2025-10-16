@@ -2,23 +2,16 @@ export interface Trip {
   id: string;
   title: string;
   description: string;
-  startDate: string;
-  endDate: string;
+  startDate: string; // ISO Date
+  endDate: string;   // ISO Date
   travelers: number;
-  budget: number; // calculated from destinations
-  destinations?: Destination;
-  Interest?: Interest;
-}
+  isTemplate: boolean;
+  rating?: number | null;
+  budget: number; // Decimal as string to match Prisma Decimal handling
+  activities?: Activity[];
 
-export interface Template {
-  id: string;
-  title: string;
-  description: string;
-  totalDays: number;
-  budget: number;
-  rating: number | null; // 0..5, can be null
-  destinations?: Destination;
-  Interest?: Interest;
+  destination?: Destination | null;
+  Interest?: Interest | null;
 }
 
 export interface Destination {
@@ -26,10 +19,7 @@ export interface Destination {
   country: string;
   city: string;
   description: string;
-  budget: number; // calculated from activities
   trip?: Trip[];
-  template?: Template[];
-  activities?: Activity[];
 }
 
 export interface Activity {
@@ -37,19 +27,17 @@ export interface Activity {
   name: string;
   description: string;
   date: string; // ISO string
-  time: string; // "HH:mm" or "HH:mm:ss"
+  time: string;
   latitude: number;
   longitude: number;
   location: string;
-  budget: number;
-  destinationId?: string;
-  destination?: Destination;
+  budget: number; // Decimal as string
+  trip?: Trip | null;
 }
 
 export interface Interest {
   id: string;
   name: string;
   icon: string;
-  Trip?: Trip[];
-  Template?: Template[];
+  trip?: Trip[];
 }

@@ -18,10 +18,12 @@ type TripCreateContextType = {
   setTravlers?: (num: number) => void;
   budget?: number;
   setBudget?: (num: number) => void;
-  interests?: Interest | null;
-  setInterests?: (interests: Interest | null) => void;
+  interest?: Interest | null;
+  setInterest?: (interests: Interest | null) => void;
   name?: string;
   setName?: (name: string) => void;
+  isTemplate?: boolean;
+  setIsTemplate?: (val: boolean) => void;
 };
 
 const TripCreateContext = createContext<TripCreateContextType | undefined>(undefined);
@@ -34,8 +36,9 @@ export const TripCreateProvider = ({ children }: { children: React.ReactNode }) 
   const [allowContinue, setAllowContinue] = useState(false);
   const [travlers, setTravlers] = useState(1);
   const [budget, setBudget] = useState<number | undefined>(undefined);
-  const [interests, setInterests] = useState<Interest | null>(null);
+  const [interest, setInterest] = useState<Interest | null>(null);
   const [name, setName] = useState<string | undefined>(undefined);
+  const [isTemplate, setIsTemplate] = useState<boolean>(false);
 
   return (
     <TripCreateContext.Provider 
@@ -47,8 +50,9 @@ export const TripCreateProvider = ({ children }: { children: React.ReactNode }) 
         allowContinue, setAllowContinue,
         travlers, setTravlers,
         budget, setBudget,
-        interests, setInterests,
-        name, setName
+        interest, setInterest,
+        name, setName,
+        isTemplate, setIsTemplate
       }}>
       {children}
     </TripCreateContext.Provider>
@@ -60,4 +64,3 @@ export const useTripCreate = () => {
   if (!ctx) throw new Error('useTripCreate must be used within TripCreateProvider');
   return ctx;
 };
-

@@ -9,15 +9,25 @@ import { useTripCreate } from '../TripCreateContext';
 
 export default function NameStepPage() {
     const router = useRouter();
-    const { selectedDestination, setAllowContinue, travlers, depatureDate, returnDate, interests, budget, name, setName } = useTripCreate();
+    const { 
+        selectedDestination, 
+        setAllowContinue, 
+        travlers, 
+        depatureDate, 
+        returnDate, 
+        interest, 
+        budget, 
+        name, 
+        setName,
+     } = useTripCreate();
 
     useEffect(() => {
-        if (!selectedDestination || !(depatureDate && returnDate) || !(travlers && travlers > 0) || !(interests) || !(budget&&budget>=0)) {
+        if (!selectedDestination || !(depatureDate && returnDate) || !(travlers && travlers > 0) || !(interest) || !(budget&&budget>=0)) {
         // If user navigates directly here, send them back to step 1
         console.log('No destination selected, redirecting to step 1');
         router.replace('/trips/create');
         }
-    }, [selectedDestination, router, depatureDate, returnDate, travlers, interests, budget]);
+    }, [selectedDestination, router, depatureDate, returnDate, travlers, interest, budget]);
 
     useEffect(() => {
         if (setAllowContinue) {
@@ -28,6 +38,8 @@ export default function NameStepPage() {
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (setName) setName(e.target.value);
     }
+
+
 
     return (
         <div className="flex flex-col gap-6">

@@ -2,7 +2,7 @@
 
 import TripCard from '@/components/custom/tripCard';
 import { Button } from '@/components/ui/button';
-import { DatabaseTrip } from '@/lib/type';
+import { Trip } from '@/lib/type';
 import animationData from '@public/lotties/noTrip.json';
 import Lottie from 'lottie-react';
 import { ArrowRight } from 'lucide-react';
@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const [trips, setTrips] = useState<DatabaseTrip[]>([]);
+  const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -70,7 +70,7 @@ export default function Home() {
           );
           const nextTrip = sortedTrips[0];
           if (!nextTrip) return null;
-          const destination = nextTrip.destinations?.[0];
+          const destination = nextTrip.destination;
           const location = destination
             ? `${destination.city}, ${destination.country}`
             : "Unknown Location";
@@ -97,7 +97,7 @@ export default function Home() {
         <div className="w-full">
           <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar py-2 px-1">
             {trips.map((trip) => {
-              const destination = trip.destinations?.[0];
+              const destination = trip.destination;
               const location = destination
                 ? `${destination.city}, ${destination.country}`
                 : "Unknown Location";

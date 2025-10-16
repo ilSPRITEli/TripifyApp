@@ -1,35 +1,37 @@
-import type { Prisma } from '@prisma/client';
-import { PrismaClient } from '@prisma/client';
-import { NextRequest, NextResponse } from 'next/server';
+import type { Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 
 // Initialize Prisma with better error handling
 let prisma: PrismaClient;
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 try {
   prisma = new PrismaClient();
 } catch (error) {
-  console.error('Failed to initialize Prisma Client:', error);
-  throw new Error('Database connection failed. Please check your DATABASE_URL environment variable.');
+  console.error("Failed to initialize Prisma Client:", error);
+  throw new Error(
+    "Database connection failed. Please check your DATABASE_URL environment variable."
+  );
 }
 
 export async function GET() {
   try {
     const trips = await prisma.trip.findMany({
       include: {
-        destinations: true,
-        Interest: true
+        destination: true,
+        Interest: true,
       },
       orderBy: {
-        startDate: 'desc'
-      }
+        startDate: "desc",
+      },
     });
 
     return NextResponse.json({ trips }, { status: 200 });
   } catch (error) {
-    console.error('Error fetching trips:', error);
-    
+    console.error("Error fetching trips:", error);
+
     return NextResponse.json(
-      { error: 'Failed to fetch trips' },
+      { error: "Failed to fetch trips" },
       { status: 500 }
     );
   }
@@ -38,20 +40,29 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { 
-      name, 
-      selectedDestination, 
-      depatureDate, 
-      returnDate, 
-      travlers, 
-      budget, 
-      interests 
+    const {
+      name,
+      depatureDate,
+      returnDate,
+      travlers,
+      budget,
+      interest,
+      destination,
+      isTemplate,
     } = body;
 
     // Validate required fields
-    if (!name || !selectedDestination || !depatureDate || !returnDate || !travlers || !budget) {
+    if (
+      !name ||
+      !depatureDate ||
+      !returnDate ||
+      !travlers ||
+      !budget ||
+      !interest ||
+      !destination
+    ) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: "Missing required fields" },
         { status: 400 }
       );
     }
@@ -59,34 +70,41 @@ export async function POST(request: NextRequest) {
     // Prepare trip data
     const tripData: Prisma.TripUncheckedCreateInput = {
       title: name,
-      description: `Trip to ${selectedDestination.city}, ${selectedDestination.country}`,
+      description: `Trip to ${destination.city}, ${destination.country}`,
       startDate: new Date(depatureDate),
       endDate: new Date(returnDate),
       travelers: travlers,
       budget: budget,
-      destinations: {
-        create: {
-          country: selectedDestination.country,
-          city: selectedDestination.city,
-          description: selectedDestination.description,
-          latitude: selectedDestination.latitude,
-          longitude: selectedDestination.longitude,
-          budget: budget, // You might want to calculate this differently
-        }
-      }
+      isTemplate: isTemplate,
     };
 
     // Add interestId only if interests exist and have valid IDs
-    if (interests) {
+    if (interest) {
       // Verify that the interest exists in the database
       const existingInterest = await prisma.interest.findUnique({
-        where: { id: interests.id }
+        where: { id: interest.id },
       });
-      
+
       if (existingInterest) {
-        tripData.interestId = interests.id;
+        tripData.interestId = interest.id;
       } else {
-        console.warn(`Interest with ID ${interests.id} not found in database. Skipping interest assignment.`);
+        console.warn(
+          `Interest with ID ${interest.id} not found in database.  using null instead`
+        );
+      }
+    }
+
+    if (destination) {
+      const existingDest = await prisma.destination.findUnique({
+        where: { id: destination.id },
+      });
+
+      if (existingDest) {
+        tripData.destinationId = destination.id;
+      } else {
+        console.warn(
+          `Destination with ID ${destination.id} not found in database. using null instead`
+        );
       }
     }
 
@@ -94,33 +112,42 @@ export async function POST(request: NextRequest) {
     const trip = await prisma.trip.create({
       data: tripData,
       include: {
-        destinations: true,
-        Interest: true
-      }
+        destination: true,
+        Interest: true,
+      },
     });
 
     return NextResponse.json({ trip }, { status: 201 });
   } catch (error) {
-    console.error('Error creating trip:', error);
-    
+    console.error("Error creating trip:", error);
+
     // Check if it's a database connection error
-    if (error instanceof Error && error.message.includes('DATABASE_URL')) {
+    if (error instanceof Error && error.message.includes("DATABASE_URL")) {
       return NextResponse.json(
-        { error: 'Database connection failed. Please check your environment configuration.' },
+        {
+          error:
+            "Database connection failed. Please check your environment configuration.",
+        },
         { status: 500 }
       );
     }
-    
+
     // Check for foreign key constraint violations
-    if (error instanceof Error && error.message.includes('Foreign key constraint violated')) {
+    if (
+      error instanceof Error &&
+      error.message.includes("Foreign key constraint violated")
+    ) {
       return NextResponse.json(
-        { error: 'Invalid reference data. Please check your interest selection.' },
+        {
+          error:
+            "Invalid reference data. Please check your interest selection.",
+        },
         { status: 400 }
       );
     }
-    
+
     return NextResponse.json(
-      { error: 'Failed to create trip' },
+      { error: "Failed to create trip" },
       { status: 500 }
     );
   }
