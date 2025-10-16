@@ -5,11 +5,11 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Input } from '@/components/ui/input';
 import { Activity, Trip } from '@/lib/type';
 import { format } from 'date-fns';
-import { ArrowLeft, ChevronDown, ChevronRight, ExternalLink, MoreVertical, Plus } from 'lucide-react';
+import { ArrowLeft, ExternalLink, MoreVertical, Plus } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Switch } from '@/components/ui/switch';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 
@@ -25,7 +25,7 @@ export default function TripDetailPage() {
   const [trip, setTrip] = useState<Trip | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
   const [showAdd, setShowAdd] = useState(false);
 
   // Create Activity form state
@@ -93,6 +93,13 @@ export default function TripDetailPage() {
     return map;
   }, [trip]);
 
+  // open first day by default when days are available
+  useEffect(() => {
+    if (openKeys.length === 0 && days.length > 0) {
+      setOpenKeys([days[0].key]);
+    }
+  }, [days]);
+
   async function togglePublish(next: boolean) {
     if (!trip) return;
     try {
@@ -151,7 +158,7 @@ export default function TripDetailPage() {
       setShowAdd(false);
       // expand corresponding day
       const key = dayKey(new Date(activity.date));
-      setExpanded((e) => ({ ...e, [key]: true }));
+      setOpenKeys((prev) => Array.from(new Set([...(prev || []), key])));
       // reset form
       setForm({ name: '', date: '', time: '', description: '', latitude: '', longitude: '', location: '', budget: '' });
     } catch (e) {
@@ -185,59 +192,53 @@ export default function TripDetailPage() {
         </label>
       </div>
 
-      <div className="space-y-3">
+      <Accordion type="multiple" value={openKeys} onValueChange={(v) => setOpenKeys(v as string[])} className="space-y-3">
         {days.map((d, idx) => {
           const key = d.key;
-          const open = expanded[key] ?? idx === 0; // open first by default
           const acts = activitiesByDay[key] || [];
           return (
-            <Collapsible key={key} open={open} onOpenChange={(val) => setExpanded((e) => ({ ...e, [key]: val }))}>
-              <div className="bg-white rounded-2xl shadow p-4">
-                <CollapsibleTrigger asChild>
-                  <button className="w-full flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-primary text-secondary rounded-full w-10 h-10 flex items-center justify-center font-semibold">{idx + 1}</div>
-                      <div className="text-lg font-medium">Day {idx + 1}</div>
-                    </div>
-                    {open ? <ChevronDown /> : <ChevronRight />}
-                  </button>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="mt-3 space-y-3">
-                    {acts.length === 0 && (
-                      <div className="text-sm text-muted-foreground">No activities</div>
-                    )}
-                    {acts.map((a) => (
-                      <div key={a.id} className="rounded-2xl border p-4 flex items-center justify-between">
-                        <div className="min-w-0">
-                          <div className="font-medium truncate">{a.name}</div>
-                          <div className="text-xs text-muted-foreground">{a.time}</div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="icon" onClick={() => openMaps(a)} aria-label="Open in Maps">
-                            <ExternalLink />
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" aria-label="More">
-                                <MoreVertical />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => { /* TODO: implement edit */ }}>Edit</DropdownMenuItem>
-                              <DropdownMenuItem variant="destructive" onClick={() => { /* TODO: implement delete */ }}>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
+            <AccordionItem key={key} value={key} className="bg-white rounded-2xl shadow px-4">
+              <AccordionTrigger className="w-full flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="bg-primary text-secondary rounded-full w-10 h-10 flex items-center justify-center font-semibold">{idx + 1}</div>
+                  <div className="text-lg font-medium">Day {idx + 1}</div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="mt-1 space-y-3">
+                  {acts.length === 0 && (
+                    <div className="text-sm text-muted-foreground">No activities</div>
+                  )}
+                  {acts.map((a) => (
+                    <div key={a.id} className="rounded-2xl border p-4 flex items-center justify-between">
+                      <div className="min-w-0">
+                        <div className="font-medium truncate">{a.name}</div>
+                        <div className="text-xs text-muted-foreground">{a.time}</div>
                       </div>
-                    ))}
-                  </div>
-                </CollapsibleContent>
-              </div>
-            </Collapsible>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="icon" onClick={() => openMaps(a)} aria-label="Open in Maps">
+                          <ExternalLink />
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" aria-label="More">
+                              <MoreVertical />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => { /* TODO: implement edit */ }}>Edit</DropdownMenuItem>
+                            <DropdownMenuItem variant="destructive" onClick={() => { /* TODO: implement delete */ }}>Delete</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
           );
         })}
-      </div>
+      </Accordion>
 
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent>
