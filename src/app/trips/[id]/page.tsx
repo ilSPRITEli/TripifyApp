@@ -54,8 +54,8 @@ export default function TripDetailPage() {
         if (!res.ok) throw new Error('Failed to load trip');
         const data = await res.json();
         if (!ignore) setTrip(data.trip);
-      } catch (e: any) {
-        if (!ignore) setError(e?.message ?? 'Failed to load');
+      } catch (e: unknown) {
+        if (!ignore) setError(e instanceof Error ? e.message : 'Failed to load');
       } finally {
         if (!ignore) setLoading(false);
       }
@@ -113,8 +113,8 @@ export default function TripDetailPage() {
       });
       if (!res.ok) throw new Error('Failed to update');
       setTrip({ ...trip, isTemplate: next });
-    } catch (e) {
-      console.error(e);
+    } catch (e: unknown) {
+      console.error(e instanceof Error ? e.message : e);
     }
   }
 
@@ -164,8 +164,8 @@ export default function TripDetailPage() {
       setOpenKeys((prev) => Array.from(new Set([...(prev || []), key])));
       // reset form
       setForm({ name: '', date: '', time: '', description: '', latitude: '', longitude: '', location: '', budget: '' });
-    } catch (e) {
-      console.error(e);
+    } catch (e: unknown) {
+      console.error(e instanceof Error ? e.message : e);
     } finally {
       setSaving(false);
     }
