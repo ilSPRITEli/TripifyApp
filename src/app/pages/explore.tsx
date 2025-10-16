@@ -2,13 +2,13 @@
 import TripCard from "@/components/custom/tripCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DatabaseTrip, Interest } from "@/lib/type";
+import { Interest, Trip } from "@/lib/type";
 import { ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Explore(){
-    const [trips, setTrips] = useState<DatabaseTrip[]>([]);
+    const [trips, setTrips] = useState<Trip[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -25,7 +25,7 @@ export default function Explore(){
             setLoading(true);
             setError(null);
             
-            const response = await fetch('/api/trips');
+            const response = await fetch('/api/trips/share');
             if (!response.ok) {
             throw new Error('Failed to fetch trips');
             }
@@ -67,8 +67,8 @@ export default function Explore(){
         fields.push(trip.title || "");
         fields.push(trip.description || "");
         if (trip.Interest?.name) fields.push(trip.Interest.name);
-        if (Array.isArray(trip.destinations)) {
-            for (const d of trip.destinations) {
+        if (Array.isArray(trip.destination)) {
+            for (const d of trip.destination) {
                 if (d?.city) fields.push(d.city);
                 if (d?.country) fields.push(d.country);
                 if (d?.description) fields.push(d.description);
@@ -150,7 +150,7 @@ export default function Explore(){
                     <div className="w-full">
                         <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar py-2 px-1">
                                 {filteredTrips.map((trip) => {
-                                const destination = trip.destinations?.[0];
+                                const destination = trip.destination;
                                 const location = destination
                                     ? `${destination.city}, ${destination.country}`
                                     : "Unknown Location";
@@ -184,7 +184,7 @@ export default function Explore(){
                     <div className="w-full">
                         <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar py-2 px-1">
                             {filteredTrips.map((trip) => {
-                            const destination = trip.destinations?.[0];
+                            const destination = trip.destination;
                             const location = destination
                                 ? `${destination.city}, ${destination.country}`
                                 : "Unknown Location";
