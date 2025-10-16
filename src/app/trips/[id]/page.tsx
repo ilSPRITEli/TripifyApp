@@ -1,16 +1,19 @@
 'use client';
 
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Switch } from '@/components/ui/switch';
 import { Activity, Trip } from '@/lib/type';
 import { format } from 'date-fns';
-import { ArrowLeft, ExternalLink, MoreVertical, Plus } from 'lucide-react';
+import { ArrowLeft, CalendarDays, ExternalLink, MoreVertical, Plus } from 'lucide-react';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { Switch } from '@/components/ui/switch';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 
 function dayKey(d: Date) {
@@ -168,9 +171,26 @@ export default function TripDetailPage() {
     }
   }
 
-  if (loading) return <div className="p-6">Loading…</div>;
-  if (error) return <div className="p-6 text-red-600">{error}</div>;
-  if (!trip) return <div className="p-6">Trip not found</div>;
+  if (loading) return <LoadingAct/>
+  if (error) {
+    return (
+      <div className="w-full h-dvh px-5 pb-30 gap-16 flex flex-col items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-xl font-bold text-red-600 mb-2">Error Loading Trips</h1>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <Link href={'/'}>
+          <Button variant="outline">
+            Try Again
+          </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!trip) {
+    return <NotfoundTrips />;
+  }
 
   return (
     <div className="p-4 pb-24 max-w-xl mx-auto">
@@ -247,7 +267,30 @@ export default function TripDetailPage() {
           </DialogHeader>
           <div className="grid gap-3">
             <Input placeholder="Name" value={form.name} onChange={(e) => onChange('name', e.target.value)} />
-            <Input type="date" value={form.date} onChange={(e) => onChange('date', e.target.value)} />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="justify-start">
+                  <CalendarDays className="mr-2 h-4 w-4" />
+                  {form.date ? format(new Date(form.date), 'PPP') : 'Pick a date'}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="start" className="p-0">
+                <Calendar
+                  mode="single"
+                  selected={form.date ? new Date(form.date) : undefined}
+                  onSelect={(d) => d && onChange('date', format(d, 'yyyy-MM-dd'))}
+                  disabled={(date) => {
+                    const start = new Date(trip.startDate);
+                    start.setHours(0,0,0,0);
+                    const end = new Date(trip.endDate);
+                    end.setHours(23,59,59,999);
+                    const cmp = new Date(date);
+                    cmp.setHours(0,0,0,0);
+                    return cmp < start || cmp > end;
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
             <Input type="time" value={form.time} onChange={(e) => onChange('time', e.target.value)} />
             <Input placeholder="Description" value={form.description} onChange={(e) => onChange('description', e.target.value)} />
             <div className="grid grid-cols-2 gap-2">
@@ -268,4 +311,34 @@ export default function TripDetailPage() {
       </Dialog>
     </div>
   );
+}
+
+const LoadingAct = () => (
+  <div className="w-full min-h-dvh flex flex-col items-center justify-center animate-pulse gap-4">
+    <div className="h-6 bg-gray-300 rounded w-1/2 mb-2 mx-auto"></div>
+    <div className="h-12 bg-gray-200 rounded w-5/6 mx-auto"></div>
+    <div className="h-6 bg-gray-200 rounded w-2/3 mx-auto"></div>
+    <div className="h-32 bg-gray-100 rounded w-full mx-auto"></div>
+    <div className="flex flex-row gap-2 w-full mx-auto">
+      <div className="h-6 w-1/4 bg-gray-200 rounded mx-auto"></div>
+      <div className="h-6 w-1/4 bg-gray-200 rounded mx-auto"></div>
+    </div>
+    <div className="h-8 w-1/3 bg-gray-300 rounded mx-auto"></div>
+  </div>
+);
+
+const NotfoundTrips = () => {
+  return (
+    <div className="w-full h-dvh px-5 pb-30 gap-16 flex flex-col items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-xl font-bold text-red-600 mb-2">Error Loading Trips</h1>
+        <p className="text-gray-600 mb-4">Not found</p>
+        <Link href={'/'}>
+        <Button variant="outline">
+          Try Again
+        </Button>
+        </Link>
+      </div>
+    </div>
+  )
 }
