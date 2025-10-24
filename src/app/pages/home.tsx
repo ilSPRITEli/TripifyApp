@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import TripCard from '@/components/custom/tripCard';
-import { Button } from '@/components/ui/button';
-import { Trip } from '@/lib/type';
-import animationData from '@public/lotties/noTrip.json';
-import Lottie from 'lottie-react';
-import { ArrowRight } from 'lucide-react';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import TripCard from "@/components/custom/tripCard";
+import { Button } from "@/components/ui/button";
+import { Trip } from "@/lib/type";
+import animationData from "@public/lotties/noTrip.json";
+import Lottie from "lottie-react";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -22,17 +22,17 @@ export default function Home() {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await fetch('/api/trips');
+
+      const response = await fetch("/api/trips");
       if (!response.ok) {
-        throw new Error('Failed to fetch trips');
+        throw new Error("Failed to fetch trips");
       }
-      
+
       const data = await response.json();
       setTrips(data.trips || []);
     } catch (err) {
-      console.error('Error fetching trips:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error("Error fetching trips:", err);
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -46,7 +46,9 @@ export default function Home() {
     return (
       <div className="w-full h-dvh px-5 pb-30 gap-16 flex flex-col items-center justify-center">
         <div className="text-center">
-          <h1 className="text-xl font-bold text-red-600 mb-2">Error Loading Trips</h1>
+          <h1 className="text-xl font-bold text-red-600 mb-2">
+            Error Loading Trips
+          </h1>
           <p className="text-gray-600 mb-4">{error}</p>
           <Button onClick={showTrip} variant="outline">
             Try Again
@@ -61,12 +63,13 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full h-dvh gap-10 flex flex-col items-center justify-center">
+    <div className="w-full gap-10 flex flex-col items-center justify-center">
       <div className="grid grid-cols-1 gap-2 w-full">
-        <h1 className='text-xl font-bold'>Next Trip</h1>
+        <h1 className="text-xl font-bold section-header">Next Trip</h1>
         {(() => {
           const sortedTrips = [...trips].sort(
-            (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+            (a, b) =>
+              new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
           );
           const nextTrip = sortedTrips[0];
           if (!nextTrip) return null;
@@ -86,19 +89,24 @@ export default function Home() {
         })()}
       </div>
       <div className="grid grid-cols-1 gap-2 w-full">
-        <h1 className='text-xl font-bold'>Your upcoming trips.</h1>
+        <h1 className="text-xl font-bold section-header">
+          Your upcoming trips.
+        </h1>
         <div className="w-full">
           <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar py-2 px-1">
             {trips.map((trip) => {
               const destination = trip.destination;
               return (
-                <div className="min-w-[320px] max-w-xs flex-shrink-0" key={trip.id}>
+                <div
+                  className="min-w-[320px] max-w-xs flex-shrink-0"
+                  key={trip.id}
+                >
                   <TripCard
                     key={trip.id}
                     trip={trip}
                     className="py-0"
                     imageUrl="/images/tripImage.png"
-                    showAction = {false}
+                    showAction={false}
                     onAction={() => {
                       console.log("View trip:", trip.id);
                     }}
@@ -122,19 +130,19 @@ export function NoTrips() {
         autoplay
         className="w-[90%] mx-auto"
       />
-      <div className='flex flex-col gap-2 mt-4 text-center'>
-        <h1 className='text-xl font-bold text-center mt-4'>
+      <div className="flex flex-col gap-2 mt-4 text-center">
+        <h1 className="text-xl font-bold text-center mt-4">
           Let&apos;s Get Your Next Adventure Started.
         </h1>
-        <span className='text-xs text-center text-gray-500'>
+        <span className="text-xs text-center text-gray-500">
           Your created trips will appear here.Ready to fill this space?
         </span>
         <Link href="/trips/create" passHref>
-            <Button className='!w-fit !h-fit mt-2 mx-auto bg-primary rounded-full text-secondary hover:bg-primary/80 !px-6 !py-4'>
-                Start planning now <ArrowRight className='ml-2' size={16} />
-            </Button>
+          <Button className="!w-fit !h-fit mt-2 mx-auto bg-primary rounded-full text-secondary hover:bg-primary/80 !px-6 !py-4">
+            Start planning now <ArrowRight className="ml-2" size={16} />
+          </Button>
         </Link>
-        <Link href="/explore" className='text-xs text-primary underline'>
+        <Link href="/explore" className="text-xs text-primary underline">
           need some inspiration? click
         </Link>
       </div>

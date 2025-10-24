@@ -45,13 +45,13 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #F4F4F4;
+  --background: #f4f4f4;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #932F67;
+  --primary: #932f67;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: #eff0c4;
   --secondary-foreground: oklch(0.205 0 0);
@@ -122,6 +122,9 @@
 }
 
 @layer utilities {
+  .section-header {
+    @apply border-l-4 border-primary pl-2;
+  }
   /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
