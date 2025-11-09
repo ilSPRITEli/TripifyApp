@@ -104,7 +104,7 @@ const Navbar = () => {
         </div>
         <div
           key={"cursor"}
-          className="absolute w-16 h-16 bg-white bottom-7 pointer-events-none z-0 transition-all duration-300 ease-out"
+          className="absolute w-16 h-16 bg-transparent bottom-7 pointer-events-none z-0 transition-all duration-300 ease-out"
           style={{ left: `${cursorLeft}px` }}
         >
           <img
